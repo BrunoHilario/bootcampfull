@@ -17,5 +17,19 @@ function preventFormSubmit() {
 }
 
 function activeinput() {
+  function insertName(newName) {
+    globalNames.push(newName);
+    render();
+  }
+  function handleTyping(event) {
+    if (event.key === 'Enter') {
+      insertName(event.target.value);
+    }
+  }
   inputName.focus;
+  inputName.addEventListener('keyup', handleTyping);
+}
+function render() {
+  var divNames = document.querySelector('#names');
+  divNames.innerHTML = '<ul><li>NOme 1</li><li>NOme 2</li></ul>';
 }
