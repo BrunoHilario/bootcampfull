@@ -2,11 +2,13 @@ window.addEventListener('load', start);
 
 var globalNames = ['um', 'dois', 'tres', 'quatro'];
 var inputName = null;
-
+var isEditing = false;
+var currentIndex = null;
 function start() {
   inputName = document.querySelector('#inputName');
   preventFormSubmit();
   activeinput();
+  render();
 }
 function preventFormSubmit() {
   function handleFormSubmit(event) {
@@ -21,15 +23,78 @@ function activeinput() {
     globalNames.push(newName);
     render();
   }
+  function updateName(newName) {
+    globalNames[currentIndex] = newName;
+    render();
+  }
   function handleTyping(event) {
+    var hasText = !!event.target.value && event.target.value.trim() !== '';
+    if (!hasText) {
+      clearInput();
+      return;
+    }
+
     if (event.key === 'Enter') {
-      insertName(event.target.value);
+      if (isEditing) {
+        updateName(event.target.value);
+      } else {
+        insertName(event.target.value);
+      }
+      isEditing = false;
+      clearInput();
     }
   }
   inputName.focus;
   inputName.addEventListener('keyup', handleTyping);
 }
 function render() {
-  var divNames = document.querySelector('#names');
-  divNames.innerHTML = '<ul><li>NOme 1</li><li>NOme 2</li></ul>';
+  function createDeleteButton(index) {
+    function deleteName() {
+      globalNames.splice(index, 1);
+      render();
+    }
+    var button = document.createElement('button');
+    button.classList.add('deleteButton'); //classe css
+    button.textContent = 'x';
+    button.addEventListener('click', deleteName);
+    return button;
+  }
+
+  function createSpan(name, index) {
+    function editItem() {
+      inputName.value = name;
+      inputName.focus();
+      isEditing = true;
+      currentIndex = index;
+    }
+    var span = document.createElement('span');
+    span.classList.add('clickable'); //classe css
+    span.textContent = name;
+    span.addEventListener('click', editItem);
+    return span;
+  }
+
+  var divNames = document.querySelector('#names'); //div names
+  divNames.innerHTML = '';
+
+  var ul = document.createElement('ul');
+
+  for (var i = 0; i < globalNames.length; i++) {
+    var currentName = globalNames[i];
+    var li = document.createElement('li');
+    var button = createDeleteButton(i);
+    var span = createSpan(currentName, i);
+    li.appendChild(button);
+    li.appendChild(span);
+
+    ul.appendChild(li);
+  }
+
+  divNames.appendChild(ul);
+  clearInput();
+}
+
+function clearInput() {
+  inputName.value = '';
+  inputName.focus();
 }
