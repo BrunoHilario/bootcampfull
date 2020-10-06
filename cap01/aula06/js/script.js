@@ -1,15 +1,16 @@
-window.addEventListener('load', start);
-
+//window.addEventListener('load', start); refatorar
 var globalNames = ['um', 'dois', 'tres', 'quatro'];
 var inputName = null;
 var isEditing = false;
 var currentIndex = null;
-function start() {
+//funcao start refatorada
+window.addEventListener('load', () => {
   inputName = document.querySelector('#inputName');
   preventFormSubmit();
   activeinput();
   render();
-}
+});
+
 function preventFormSubmit() {
   function handleFormSubmit(event) {
     event.preventDefault();

@@ -111,4 +111,8 @@ function infiniteSum(...numbers) {
   return numbers.reduce((acc, curr) => acc + curr, 0);
 }
 
-function doDestructuring() {}
+function doDestructuring() {
+  const first = people.results[0];
+  const { username, password } = first.login;
+  console.log(username);
+}
